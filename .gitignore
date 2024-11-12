@@ -1,6 +1,6 @@
 ﻿# files created by IDE
 .idea
-music-analyzer/.idea
+music_analyzer/.idea
 
 # files created in compilation
 src/__pycache__

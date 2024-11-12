@@ -19,5 +19,4 @@ The usage guide will soon be found in docs/usage.md
 - Create scripts to wrap everything together and suggest songs to mix into an input song based on BPM, camelot and other factors (energy, loudness, etc.)
 - Calculate a song's BPM and key from scratch; Calculate whether a song contains a key or BPM change
 - Make BPM changes (with or without changing the key) as specified by the user
-- Create a command-line client for the analyzer
 - Create file converters so that all audio file types are compatible with the analyzer
