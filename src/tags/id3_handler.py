@@ -1,24 +1,23 @@
 from mutagen.id3 import ID3, ID3NoHeaderError, COMM
+from mutagen import MutagenError
 import os
 
 
 def find_song(filename):
     try:
         audio = ID3(filename)
-    except FileNotFoundError:
-        return None
-    except ID3NoHeaderError:
+    except (FileNotFoundError, ID3NoHeaderError, MutagenError):
+        print("yo")
         return None
     return audio
 
 
 def find_song_id3_tags(filename, tag):
     song = find_song(filename)
+    if song is None:
+        return None
     try:
-        if song is None or song[tag] is None:
-            return None
-        else:
-            return song[tag]
+        return song[tag]
     except KeyError:
         return None
 

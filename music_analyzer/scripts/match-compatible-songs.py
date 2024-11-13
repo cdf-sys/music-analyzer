@@ -1,6 +1,6 @@
 from music_analyzer.scripts.key_cam_comm_swapper import swap_keys_and_camelots
 from src.tags.id3_handler import find_song_id3_tags, find_songs_by_id3_tag
-from src.bpm_key_camelot.camelot_and_key import camelot_check, camelot_to_adjacent_camelots
+from src.bpm_key_camelot.camelot_and_key import camelot_check, cam_or_key_to_adjacent_camelots
 from src.bpm_key_camelot.bpm_and_key import key_check
 import os
 
@@ -17,7 +17,7 @@ def find_next_song(filename, directory):
     song_bpm = find_song_id3_tags(filename, "TBPM").text[0]
     tracks = []
     tracks_temp = []
-    compat = camelot_to_adjacent_camelots(song_cam)
+    compat = cam_or_key_to_adjacent_camelots(song_cam)
     bpm_sync = list(range(int(int(song_bpm) * 0.97) - 1, int(int(song_bpm) * 1.03)))
     for cams in compat:
         cam_list = find_songs_by_id3_tag(directory, "TKEY", cams)
