@@ -14,10 +14,13 @@ def find_song(filename):
 
 def find_song_id3_tags(filename, tag):
     song = find_song(filename)
-    if song is None or song[tag] is None:
+    try:
+        if song is None or song[tag] is None:
+            return None
+        else:
+            return song[tag]
+    except KeyError:
         return None
-    else:
-        return song[tag]
 
 
 def find_songs_by_id3_tag(directory, tag, tag_value):
@@ -27,7 +30,7 @@ def find_songs_by_id3_tag(directory, tag, tag_value):
             iter_tag = find_song_id3_tags(os.path.join(files[0], file), tag)
             if iter_tag is not None:
                 if iter_tag == tag_value:
-                    songs.append(file)
+                    songs.append([file, tag_value])
     return songs
 
 
@@ -60,7 +63,6 @@ def swap_song_id3_tags(filename, first_tag, second_tag):
                 song.add(second_tag)
                 song[second_tag] = second_tag(encoding=3, text=temp_tag2)
             song.save()
-        print(song.keys())
         song[first_tag].text[0] = temp_tag2
         song[second_tag].text[0] = temp_tag1
         song.save()

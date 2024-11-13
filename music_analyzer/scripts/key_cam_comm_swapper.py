@@ -8,10 +8,11 @@ keys = ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "
 
 
 def comment_key_check(filename):
-    key_data = find_song_id3_tags(filename, "TKEY")
-    if key_data is None:
-        return -1
-    elif key_check(str(key_data).strip("m"), keys) != -1:
+    try:
+        key_data = find_song_id3_tags(filename, "TKEY")
+    except KeyError:
+        return -1, None
+    if key_check(str(key_data).strip("m"), keys) != -1:
         return 0, key_data.text[0]
     elif camelot_check(str(key_data)) != -1:
         return 1, key_data.text[0]
@@ -28,7 +29,7 @@ def swap_keys_and_comments(directory):
     for files in os.walk(directory):
         for file in files[2]:
             file_path = os.path.join(files[0], file)
-            if comment_key_check(file_path)[0] > -1:
+            if comment_key_check(file_path)[0] != -1:
                 swap_song_id3_tags(file_path, "TKEY", "COMM::eng")
     return None
 

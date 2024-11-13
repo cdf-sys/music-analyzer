@@ -39,14 +39,21 @@ def camelot_to_key(input_camelot):
         return key_fifths[int(alphanum[1]) - 4]
 
 
+def camelot_to_adjacent_camelots(input_camelot):
+    if camelot_check(input_camelot) is None:
+        return None
+    else:
+        camelots = [input_camelot]
+        alphanum = re.split("(\\d+)", input_camelot)
+        camelots.append(alphanum[1] + "" + alphanum[2].translate({ord('A'):'B', ord('B'):'A'}))
+        camelots.append(str((int(alphanum[1]) + 1) % 12) + "" + alphanum[2])
+        camelots.append(str((int(alphanum[1]) - 1) % 12) + "" + alphanum[2])
+        return camelots
+
+
 def key_to_adjacent_camelots(input_key):
     camelot_base = key_to_camelot(input_key)
     if camelot_base is None:
         return None
     else:
-        camelots = [camelot_base]
-        alphanum = re.split("(\\d+)", camelot_base)
-        camelots.append(alphanum[1] + "" + alphanum[2].translate({ord('A'):'B', ord('B'):'A'}))
-        camelots.append(str((int(alphanum[1]) + 1) % 12) + "" + alphanum[2])
-        camelots.append(str((int(alphanum[1]) - 1) % 12) + "" + alphanum[2])
-        return camelots
+        return camelot_to_adjacent_camelots(camelot_base)
