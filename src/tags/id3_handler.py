@@ -1,4 +1,4 @@
-from mutagen.id3 import ID3, ID3NoHeaderError, TKEY, COMM
+from mutagen.id3 import ID3, ID3NoHeaderError, COMM
 import os
 
 
