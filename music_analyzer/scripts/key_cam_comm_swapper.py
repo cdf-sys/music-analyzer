@@ -1,6 +1,6 @@
 from src.bpm_key_camelot.bpm_and_key import key_check
 from src.bpm_key_camelot.camelot_and_key import camelot_check, camelot_to_key, key_to_camelot
-from src.tags.id3_handler import find_song_id3_tags, swap_song_id3_tags
+from src.tags.id3_handler import find_song_id3_tags, swap_song_key_and_comment
 from mutagen.id3 import ID3
 import os
 
@@ -8,21 +8,17 @@ keys = ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "
 
 
 def comment_key_check(filename):
-    try:
-        key_data = find_song_id3_tags(filename, "TKEY")
-    except KeyError:
+    key_data = find_song_id3_tags(filename, ["TKEY", "COMM::eng"])
+    if key_data[0] is None and key_data[1] is None:
         return -1, None
-    if key_check(str(key_data).strip("m"), keys) != -1:
-        return 0, key_data.text[0]
-    elif camelot_check(str(key_data)) != -1:
-        return 1, key_data.text[0]
     else:
-        comm_data = find_song_id3_tags(filename, "COMM::eng")
-        if key_check(str(comm_data).strip("m"), keys) != -1:
-            return 2, comm_data.text[0]
-        elif camelot_check(str(comm_data)) != -1:
-            return 3, comm_data.text[0]
-    return -1
+        for i in range(0, 1):
+            if key_data[i] is not None:
+                if key_check(str(key_data[i].text[0]).strip("m"), keys) != -1:
+                    return 0 + 2 * i, key_data[i].text[0]
+                elif camelot_check(str(key_data[i])) != -1:
+                    return 1 + 2 * i, key_data[i].text[0]
+        return -1, None
 
 
 def swap_keys_and_comments(directory):
@@ -30,7 +26,7 @@ def swap_keys_and_comments(directory):
         for file in files[2]:
             file_path = os.path.join(files[0], file)
             if comment_key_check(file_path)[0] != -1:
-                swap_song_id3_tags(file_path, "TKEY", "COMM::eng")
+                swap_song_key_and_comment(file_path)
     return None
 
 
@@ -41,9 +37,9 @@ def swap_keys_and_camelots(directory):
             vals = comment_key_check(file_path)
             if vals[0] > -1:
                 song = ID3(file_path)
-                if vals[0] == 1:
-                    song["TKEY"].text[0] = str(camelot_to_key(vals[1]))
-                elif vals[0] == 0:
+                if vals[0] == 0:
                     song["TKEY"].text[0] = str(key_to_camelot(vals[1]))
+                elif vals[0] == 1:
+                    song["TKEY"].text[0] = str(camelot_to_key(vals[1]))
                 song.save()
     return None

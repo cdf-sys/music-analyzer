@@ -5,7 +5,8 @@ keys = ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "
 
 
 def key_check(input_key, key_set):
-    if (input_key.find("A") != -1 or input_key.find("B") != -1) and bool(re.search(r'\d', input_key)):
+    if input_key is None or ((input_key.find("A") != -1 or
+                              input_key.find("B") != -1) and bool(re.search(r'\d', input_key))):
         return -1
     else:
         temp_key = input_key
