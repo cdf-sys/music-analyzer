@@ -9,14 +9,8 @@ if __name__ == "__main__":
             cam_or_comm = input("Type A to swap comment and key metadata, or B to swap key metadata from camelot to "
                                 "key or vice versa: ")
         if cam_or_comm == "A":
-            try:
-                swap_keys_and_comments(directory)
-                print("Successfully swapped keys and comments!\n")
-            except TypeError:
-                print("ERROR: non-music files found in directory\n")
+            swap_keys_and_comments(directory)
+            print("Successfully swapped keys and comments!\n")
         else:
-            try:
-                swap_keys_and_camelots(directory)
-                print("Successfully swapped keys and camelots!\n")
-            except TypeError:
-                print("ERROR: non-music files found in directory\n")
+            swap_keys_and_camelots(directory)
+            print("Successfully swapped keys and camelots!\n")
